@@ -20,6 +20,7 @@ class UserResponse(BaseModel):
     email: str
     full_name: str | None
     is_active: bool
+    is_guest: bool
     created_at: datetime
 
 

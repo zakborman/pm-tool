@@ -17,9 +17,13 @@ export default function LoginPage() {
     router.push('/dashboard')
   }
 
-  const handleGuestLogin = () => {
-    loginAsGuest()
-    router.push('/dashboard')
+  const handleGuestLogin = async () => {
+    try {
+      await loginAsGuest()
+      router.push('/dashboard')
+    } catch (error) {
+      console.error('Guest login failed:', error)
+    }
   }
 
   return (
@@ -56,10 +60,6 @@ export default function LoginPage() {
             </button>
           </div>
         </div>
-
-        <p className="text-center text-sm text-gray-500">
-          Guest mode has limited features. Create an account for full access.
-        </p>
       </div>
     </main>
   )

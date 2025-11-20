@@ -8,6 +8,7 @@ interface User {
   id: number
   email: string
   full_name: string
+  is_guest?: boolean
 }
 
 interface AuthContextType {
@@ -17,7 +18,7 @@ interface AuthContextType {
   isGuest: boolean
   login: (email: string, password: string) => Promise<void>
   setAuthToken: (token: string) => Promise<void>
-  loginAsGuest: () => void
+  loginAsGuest: () => Promise<void>
   logout: () => void
 }
 
@@ -32,16 +33,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Restore session from localStorage on mount
   useEffect(() => {
     const storedToken = localStorage.getItem('access_token')
-    const storedGuestMode = localStorage.getItem('guest_mode')
 
-    if (storedGuestMode === 'true') {
-      setIsGuest(true)
-    } else if (storedToken) {
+    if (storedToken) {
       setIsLoading(true)
       fetchCurrentUser(storedToken)
         .then((userData) => {
           setUser(userData)
           setToken(storedToken)
+          // Set isGuest based on user data from backend
+          if (userData.is_guest) {
+            setIsGuest(true)
+          }
         })
         .catch(() => {
           // Invalid token, clear it
@@ -115,14 +117,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const loginAsGuest = () => {
-    localStorage.setItem('guest_mode', 'true')
-    setIsGuest(true)
+  const loginAsGuest = async () => {
+    setIsLoading(true)
+
+    try {
+      // Call backend to create guest user
+      const response = await fetch(`${API_BASE_URL}/auth/guest`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create guest session')
+      }
+
+      const { access_token } = await response.json()
+
+      // Fetch user data (will have guest name)
+      const userData = await fetchCurrentUser(access_token)
+
+      // Store token and user
+      localStorage.setItem('access_token', access_token)
+      setToken(access_token)
+      setUser(userData)
+      setIsGuest(userData.is_guest || true)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const logout = () => {
     localStorage.removeItem('access_token')
-    localStorage.removeItem('guest_mode')
     setToken(null)
     setUser(null)
     setIsGuest(false)

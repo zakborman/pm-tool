@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 
 from app.api.schemas import Token, UserCreate, UserLogin, UserResponse
 from app.core.dependencies import get_current_user
+from app.core.name_generator import generate_random_name
+from app.core.security import get_password_hash
 from app.models.base import get_db
 from app.models.user import User
 from app.services import auth_service, user_service
@@ -39,6 +41,33 @@ def login(user_login: UserLogin, db: Session = Depends(get_db)) -> Token:
         )
 
     access_token = auth_service.create_user_token(user.email)
+    return Token(access_token=access_token, token_type="bearer")
+
+
+@router.post("/guest", response_model=Token)
+def login_as_guest(db: Session = Depends(get_db)) -> Token:
+    """Create a temporary guest user and return JWT token."""
+    # Generate random name
+    random_name = generate_random_name()
+
+    # Create unique email for guest (using timestamp for uniqueness)
+    import time
+    guest_email = f"guest_{int(time.time() * 1000)}@guest.local"
+
+    # Create guest user
+    guest_user = User(
+        email=guest_email,
+        hashed_password=get_password_hash("guest"),  # Dummy password
+        full_name=random_name,
+        is_guest=True,
+        is_active=True,
+    )
+    db.add(guest_user)
+    db.commit()
+    db.refresh(guest_user)
+
+    # Create and return token
+    access_token = auth_service.create_user_token(guest_user.email)
     return Token(access_token=access_token, token_type="bearer")
 
 
