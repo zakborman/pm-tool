@@ -16,7 +16,9 @@ docker-compose up -d
 # Backend setup
 cd backend
 uv venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate       # Bash/Zsh
+# source .venv/bin/activate.fish  # Fish shell
+# .venv\Scripts\activate          # Windows
 uv pip install -e ".[dev]"
 
 # Frontend setup
