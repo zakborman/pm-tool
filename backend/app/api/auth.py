@@ -1,0 +1,40 @@
+"""Authentication endpoints."""
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from app.api.schemas import Token, UserCreate, UserLogin, UserResponse
+from app.models.base import get_db
+from app.services import auth_service, user_service
+
+router = APIRouter(prefix="/auth", tags=["authentication"])
+
+
+@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+def register(user_create: UserCreate, db: Session = Depends(get_db)) -> UserResponse:
+    """Register a new user."""
+    # Check if user already exists
+    existing_user = user_service.get_user_by_email(db, email=user_create.email)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered",
+        )
+
+    # Create new user
+    user = user_service.create_user(db, user_create)
+    return UserResponse.model_validate(user)
+
+
+@router.post("/login", response_model=Token)
+def login(user_login: UserLogin, db: Session = Depends(get_db)) -> Token:
+    """Login user and return JWT token."""
+    user = auth_service.authenticate_user(db, user_login.email, user_login.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    access_token = auth_service.create_user_token(user.email)
+    return Token(access_token=access_token, token_type="bearer")
