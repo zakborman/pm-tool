@@ -196,3 +196,55 @@ class TestUserLogin:
         token = response.json()["access_token"]
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         assert payload["sub"] == "test@example.com"
+
+
+class TestGetCurrentUser:
+    """Test suite for getting current user endpoint."""
+
+    def test_get_current_user_success(self, client: TestClient) -> None:
+        """Test getting current user with valid token."""
+        # Register and login
+        client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "test@example.com",
+                "password": "securepassword123",
+                "full_name": "Test User",
+            },
+        )
+
+        login_response = client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": "test@example.com",
+                "password": "securepassword123",
+            },
+        )
+        token = login_response.json()["access_token"]
+
+        # Get current user
+        response = client.get(
+            "/api/v1/auth/me",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["email"] == "test@example.com"
+        assert data["full_name"] == "Test User"
+        assert "id" in data
+        assert "password" not in data
+        assert "hashed_password" not in data
+
+    def test_get_current_user_no_token(self, client: TestClient) -> None:
+        """Test getting current user without token fails."""
+        response = client.get("/api/v1/auth/me")
+        assert response.status_code == 403  # HTTPBearer returns 403 when no credentials
+
+    def test_get_current_user_invalid_token(self, client: TestClient) -> None:
+        """Test getting current user with invalid token fails."""
+        response = client.get(
+            "/api/v1/auth/me",
+            headers={"Authorization": "Bearer invalid-token"},
+        )
+        assert response.status_code == 401
