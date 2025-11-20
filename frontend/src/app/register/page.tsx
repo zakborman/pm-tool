@@ -28,25 +28,25 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
+    <main className="min-h-screen flex items-center justify-center bg-gray-900 px-4 py-8">
       <div className="max-w-md w-full space-y-6">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Account</h1>
-          <p className="text-gray-600">
+          <h1 className="text-4xl font-bold text-white mb-2">Create Account</h1>
+          <p className="text-gray-400">
             Already have an account?{' '}
-            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+            <Link href="/login" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
               Sign in
             </Link>
           </p>
         </div>
 
-        <div className="bg-white p-8 shadow-xl rounded-2xl border border-gray-100">
+        <div className="bg-gray-800 p-8 shadow-xl rounded-2xl border border-gray-700">
           {successMessage ? (
             <div
               role="alert"
-              className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center gap-3"
+              className="bg-green-900/50 border border-green-700 text-green-200 px-4 py-3 rounded-lg flex items-center gap-3"
             >
-              <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               {successMessage}
@@ -58,16 +58,16 @@ export default function RegisterPage() {
               <div className="mt-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300"></div>
+                    <div className="w-full border-t border-gray-600"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-3 bg-white text-gray-500">Or</span>
+                    <span className="px-3 bg-gray-800 text-gray-400">Or</span>
                   </div>
                 </div>
 
                 <button
                   onClick={handleGuestMode}
-                  className="mt-4 w-full bg-gray-100 text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all"
+                  className="mt-4 w-full bg-gray-700 text-gray-200 font-medium py-3 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all"
                 >
                   Continue as Guest
                 </button>
@@ -76,7 +76,7 @@ export default function RegisterPage() {
           )}
         </div>
 
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-gray-400">
           By signing up, you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>

@@ -136,7 +136,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
           Email Address
         </label>
         <input
@@ -146,18 +146,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           onChange={handleEmailChange}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : undefined}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400"
           placeholder="you@example.com"
         />
         {errors.email && (
-          <div id="email-error" role="alert" className="text-red-600 text-sm mt-2">
+          <div id="email-error" role="alert" className="text-red-400 text-sm mt-2">
             {errors.email}
           </div>
         )}
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
           Password
         </label>
         <input
@@ -167,18 +167,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           onChange={handlePasswordChange}
           aria-invalid={!!errors.password}
           aria-describedby={errors.password ? 'password-error' : undefined}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400"
           placeholder="••••••••"
         />
         {errors.password && (
-          <div id="password-error" role="alert" className="text-red-600 text-sm mt-2">
+          <div id="password-error" role="alert" className="text-red-400 text-sm mt-2">
             {errors.password}
           </div>
         )}
       </div>
 
       {errors.general && (
-        <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div role="alert" aria-live="polite" className="bg-red-900/50 border border-red-700 text-red-200 px-4 py-3 rounded-lg">
           {errors.general}
         </div>
       )}
@@ -186,7 +186,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        className="w-full bg-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
       >
         {isLoading ? 'Logging in...' : 'Sign In'}
       </button>
