@@ -8,6 +8,7 @@ interface TaskModalProps {
   onClose: () => void
   onSave: (taskData: TaskFormData) => void
   task?: Task
+  users?: User[]
 }
 
 export interface TaskFormData {
@@ -15,13 +16,21 @@ export interface TaskFormData {
   description?: string
   priority: 'low' | 'medium' | 'high'
   status: 'todo' | 'in_progress' | 'done'
+  assigned_to_id?: number | null
 }
 
-export default function TaskModal({ isOpen, onClose, onSave, task }: TaskModalProps) {
+interface User {
+  id: number
+  email: string
+  full_name: string
+}
+
+export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }: TaskModalProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium')
   const [status, setStatus] = useState<'todo' | 'in_progress' | 'done'>('todo')
+  const [assignedToId, setAssignedToId] = useState<number | null>(null)
   const [errors, setErrors] = useState<{ title?: string }>({})
 
   useEffect(() => {
@@ -30,12 +39,14 @@ export default function TaskModal({ isOpen, onClose, onSave, task }: TaskModalPr
       setDescription(task.description || '')
       setPriority(task.priority)
       setStatus(task.status)
+      setAssignedToId(task.assigned_to_id)
     } else {
       // Reset form
       setTitle('')
       setDescription('')
       setPriority('medium')
       setStatus('todo')
+      setAssignedToId(null)
     }
     setErrors({})
   }, [task, isOpen])
@@ -63,6 +74,7 @@ export default function TaskModal({ isOpen, onClose, onSave, task }: TaskModalPr
       description: description || undefined,
       priority,
       status,
+      assigned_to_id: assignedToId,
     })
   }
 
@@ -140,6 +152,25 @@ export default function TaskModal({ isOpen, onClose, onSave, task }: TaskModalPr
               <option value="todo">To Do</option>
               <option value="in_progress">In Progress</option>
               <option value="done">Done</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700 mb-1">
+              Assign To
+            </label>
+            <select
+              id="assignedTo"
+              value={assignedToId || ''}
+              onChange={(e) => setAssignedToId(e.target.value ? Number(e.target.value) : null)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Unassigned</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.full_name || user.email}
+                </option>
+              ))}
             </select>
           </div>
 

@@ -9,10 +9,17 @@ import TaskModal, { TaskFormData } from '@/components/TaskModal'
 
 const API_BASE_URL = 'http://localhost:8000/api/v1'
 
+interface User {
+  id: number
+  email: string
+  full_name: string
+}
+
 export default function DashboardPage() {
   const { user, token, logout } = useAuth()
   const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -21,6 +28,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (token) {
       fetchTasks()
+      fetchUsers()
     }
   }, [token])
 
@@ -45,6 +53,27 @@ export default function DashboardPage() {
       setError(err instanceof Error ? err.message : 'Failed to fetch tasks')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const fetchUsers = async () => {
+    if (!token) return
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch users')
+      }
+
+      const data = await response.json()
+      setUsers(data)
+    } catch (err) {
+      console.error('Error fetching users:', err)
     }
   }
 
@@ -195,6 +224,7 @@ export default function DashboardPage() {
           onClose={handleModalClose}
           onSave={editingTask ? handleEditTask : handleCreateTask}
           task={editingTask}
+          users={users}
         />
       </div>
     </ProtectedRoute>

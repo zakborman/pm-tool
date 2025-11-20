@@ -46,3 +46,13 @@ def login(user_login: UserLogin, db: Session = Depends(get_db)) -> Token:
 def get_me(current_user: User = Depends(get_current_user)) -> UserResponse:
     """Get current authenticated user."""
     return UserResponse.model_validate(current_user)
+
+
+@router.get("/users", response_model=list[UserResponse])
+def get_users(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[UserResponse]:
+    """Get all users for task assignment."""
+    users = db.query(User).filter(User.is_active == True).all()
+    return [UserResponse.model_validate(user) for user in users]
