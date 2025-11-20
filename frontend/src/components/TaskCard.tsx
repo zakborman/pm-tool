@@ -9,9 +9,9 @@ interface TaskCardProps {
 }
 
 const priorityColors = {
-  low: 'bg-blue-100 text-blue-800',
-  medium: 'bg-yellow-100 text-yellow-800',
-  high: 'bg-red-100 text-red-800',
+  low: 'bg-blue-900/50 text-blue-300 border border-blue-700',
+  medium: 'bg-yellow-900/50 text-yellow-300 border border-yellow-700',
+  high: 'bg-red-900/50 text-red-300 border border-red-700',
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
@@ -36,12 +36,12 @@ export default function TaskCard({ task }: TaskCardProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white rounded-lg shadow-sm p-4 cursor-move hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-blue-300"
+      className="bg-gray-700 rounded-lg shadow-md p-4 cursor-move hover:shadow-lg transition-all duration-200 border border-gray-600 hover:border-blue-500"
     >
-      <h3 className="font-semibold text-gray-900 mb-2">{task.title}</h3>
+      <h3 className="font-semibold text-white mb-2">{task.title}</h3>
 
       {task.description && (
-        <p className="text-sm text-gray-600 mb-3">{truncateText(task.description)}</p>
+        <p className="text-sm text-gray-300 mb-3">{truncateText(task.description)}</p>
       )}
 
       <div className="flex items-center justify-between mt-2">
@@ -52,7 +52,7 @@ export default function TaskCard({ task }: TaskCardProps) {
         </span>
 
         {task.due_date && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-400">
             Due: {new Date(task.due_date).toLocaleDateString()}
           </span>
         )}
@@ -63,7 +63,7 @@ export default function TaskCard({ task }: TaskCardProps) {
           <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
-          <span className="text-xs text-gray-500">Assigned</span>
+          <span className="text-xs text-gray-400">Assigned</span>
         </div>
       )}
     </div>

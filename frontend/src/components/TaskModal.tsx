@@ -83,17 +83,17 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full transform transition-all">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full transform transition-all border border-gray-700">
+        <div className="px-6 py-4 border-b border-gray-700">
+          <h2 className="text-xl font-semibold text-white">
             {task ? 'Edit Task' : 'Create Task'}
           </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-1">
               Title *
             </label>
             <input
@@ -101,15 +101,15 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
             />
             {errors.title && (
-              <p className="text-red-600 text-sm mt-1">{errors.title}</p>
+              <p className="text-red-400 text-sm mt-1">{errors.title}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">
               Description
             </label>
             <textarea
@@ -117,19 +117,19 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
             />
           </div>
 
           <div>
-            <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="priority" className="block text-sm font-medium text-gray-300 mb-1">
               Priority
             </label>
             <select
               id="priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -138,7 +138,7 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
           </div>
 
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="status" className="block text-sm font-medium text-gray-300 mb-1">
               Status
             </label>
             <select
@@ -147,7 +147,7 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
               onChange={(e) =>
                 setStatus(e.target.value as 'todo' | 'in_progress' | 'done')
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="todo">To Do</option>
               <option value="in_progress">In Progress</option>
@@ -156,14 +156,14 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
           </div>
 
           <div>
-            <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-300 mb-1">
               Assign To
             </label>
             <select
               id="assignedTo"
               value={assignedToId || ''}
               onChange={(e) => setAssignedToId(e.target.value ? Number(e.target.value) : null)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Unassigned</option>
               {users.map((user) => (
@@ -178,13 +178,13 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+              className="px-4 py-2 text-gray-200 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors border border-gray-600"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors shadow-md hover:shadow-lg"
             >
               {task ? 'Save' : 'Create'}
             </button>

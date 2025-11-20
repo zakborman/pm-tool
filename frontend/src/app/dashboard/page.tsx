@@ -203,28 +203,28 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-100">
-        <header className="bg-white shadow-sm">
+      <div className="min-h-screen bg-gray-900">
+        <header className="bg-gray-800 shadow-lg border-b border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">PM Tool</h1>
+                <h1 className="text-2xl font-bold text-white">PM Tool</h1>
                 <div className="flex items-center gap-3">
-                  <p className="text-sm text-gray-600 flex items-center gap-2">
+                  <p className="text-sm text-gray-300 flex items-center gap-2">
                     Welcome, {user?.full_name || user?.email}
                     {isGuest && (
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full font-medium border border-blue-700">
                         Guest
                       </span>
                     )}
                   </p>
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-400">
                       {isConnected ? 'Connected' : 'Disconnected'}
                     </span>
                     {onlineUsers.length > 0 && (
-                      <span className="text-xs text-gray-500 ml-2">
+                      <span className="text-xs text-gray-400 ml-2">
                         • {onlineUsers.length} user{onlineUsers.length !== 1 ? 's' : ''} online
                       </span>
                     )}
@@ -234,13 +234,13 @@ export default function DashboardPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md hover:shadow-lg"
                 >
                   New Task
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
+                  className="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg transition-colors border border-gray-600"
                 >
                   {isGuest ? 'Exit Guest Session' : 'Logout'}
                 </button>
@@ -251,12 +251,12 @@ export default function DashboardPage() {
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
+            <div className="mb-4 bg-red-900/50 border border-red-700 rounded-lg p-4 animate-fade-in">
               <div className="flex items-center justify-between">
-                <p className="text-red-800">{error}</p>
+                <p className="text-red-200">{error}</p>
                 <button
                   onClick={() => setError(null)}
-                  className="text-red-600 hover:text-red-700 font-medium"
+                  className="text-red-300 hover:text-red-200 font-medium"
                 >
                   ✕
                 </button>
@@ -267,8 +267,8 @@ export default function DashboardPage() {
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading tasks...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                <p className="mt-4 text-gray-300">Loading tasks...</p>
               </div>
             </div>
           ) : (

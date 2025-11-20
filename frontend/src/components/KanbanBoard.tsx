@@ -76,10 +76,10 @@ export default function KanbanBoard({ tasks, onTaskMove }: KanbanBoardProps) {
           const columnTasks = getTasksByStatus(column.status)
 
           return (
-            <div key={column.id} className="bg-gray-50 rounded-lg p-4" data-testid={`column-${column.id}`}>
+            <div key={column.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700" data-testid={`column-${column.id}`}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">{column.title}</h2>
-                <span className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm font-medium">
+                <h2 className="text-lg font-semibold text-white">{column.title}</h2>
+                <span className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-sm font-medium border border-gray-600">
                   {columnTasks.length}
                 </span>
               </div>
@@ -91,7 +91,7 @@ export default function KanbanBoard({ tasks, onTaskMove }: KanbanBoardProps) {
               >
                 <div className="space-y-3 min-h-[200px] transition-all duration-200">
                   {columnTasks.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400 text-sm">
+                    <div className="text-center py-8 text-gray-500 text-sm">
                       <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
