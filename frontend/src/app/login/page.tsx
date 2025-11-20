@@ -1,16 +1,17 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
 import LoginForm from '@/components/LoginForm'
 import Link from 'next/link'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { setAuthToken } = useAuth()
 
-  const handleSuccess = (accessToken: string) => {
-    // Store the token (we'll improve this with a proper auth context later)
-    localStorage.setItem('access_token', accessToken)
+  const handleSuccess = async (accessToken: string) => {
+    // Update auth context with the token
+    await setAuthToken(accessToken)
 
     // Redirect to dashboard
     router.push('/dashboard')
