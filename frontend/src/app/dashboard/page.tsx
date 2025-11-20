@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import KanbanBoard, { Task } from '@/components/KanbanBoard'
 import TaskModal, { TaskFormData } from '@/components/TaskModal'
+import { useWebSocket } from '@/hooks/useWebSocket'
 
 const API_BASE_URL = 'http://localhost:8000/api/v1'
 
@@ -24,6 +25,29 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | undefined>(undefined)
+  const [onlineUsers, setOnlineUsers] = useState<number[]>([])
+
+  const handleWebSocketMessage = useCallback((data: any) => {
+    if (data.type === 'task_created') {
+      setTasks((prevTasks) => [...prevTasks, data.task])
+    } else if (data.type === 'task_updated') {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === data.task.id ? data.task : task))
+      )
+    } else if (data.type === 'task_deleted') {
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== data.task_id))
+    }
+  }, [])
+
+  const handlePresenceUpdate = useCallback((activeUsers: number[]) => {
+    setOnlineUsers(activeUsers)
+  }, [])
+
+  const { isConnected } = useWebSocket({
+    token,
+    onMessage: handleWebSocketMessage,
+    onPresenceUpdate: handlePresenceUpdate,
+  })
 
   useEffect(() => {
     if (token) {
@@ -176,7 +200,20 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">PM Tool</h1>
-                <p className="text-sm text-gray-600">Welcome, {user?.full_name || user?.email}</p>
+                <div className="flex items-center gap-3">
+                  <p className="text-sm text-gray-600">Welcome, {user?.full_name || user?.email}</p>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <span className="text-xs text-gray-500">
+                      {isConnected ? 'Connected' : 'Disconnected'}
+                    </span>
+                    {onlineUsers.length > 0 && (
+                      <span className="text-xs text-gray-500 ml-2">
+                        • {onlineUsers.length} user{onlineUsers.length !== 1 ? 's' : ''} online
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
               <div className="flex gap-3">
                 <button
