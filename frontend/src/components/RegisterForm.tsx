@@ -124,10 +124,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium mb-1">
-          Email
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+          Email Address
         </label>
         <input
           id="email"
@@ -136,17 +136,32 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           onChange={handleEmailChange}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : undefined}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          placeholder="you@example.com"
         />
         {errors.email && (
-          <div id="email-error" role="alert" className="text-red-600 text-sm mt-1">
+          <div id="email-error" role="alert" className="text-red-600 text-sm mt-2">
             {errors.email}
           </div>
         )}
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium mb-1">
+        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+          Full Name <span className="text-gray-400 font-normal">(optional)</span>
+        </label>
+        <input
+          id="fullName"
+          type="text"
+          value={fullName}
+          onChange={handleFullNameChange}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          placeholder="John Doe"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
           Password
         </label>
         <input
@@ -156,17 +171,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           onChange={handlePasswordChange}
           aria-invalid={!!errors.password}
           aria-describedby={errors.password ? 'password-error' : undefined}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          placeholder="At least 8 characters"
         />
         {errors.password && (
-          <div id="password-error" role="alert" className="text-red-600 text-sm mt-1">
+          <div id="password-error" role="alert" className="text-red-600 text-sm mt-2">
             {errors.password}
           </div>
         )}
       </div>
 
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
+        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
           Confirm Password
         </label>
         <input
@@ -176,30 +192,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           onChange={handleConfirmPasswordChange}
           aria-invalid={!!errors.confirmPassword}
           aria-describedby={errors.confirmPassword ? 'confirm-password-error' : undefined}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          placeholder="Re-enter your password"
         />
         {errors.confirmPassword && (
-          <div id="confirm-password-error" role="alert" className="text-red-600 text-sm mt-1">
+          <div id="confirm-password-error" role="alert" className="text-red-600 text-sm mt-2">
             {errors.confirmPassword}
           </div>
         )}
       </div>
 
-      <div>
-        <label htmlFor="fullName" className="block text-sm font-medium mb-1">
-          Full Name
-        </label>
-        <input
-          id="fullName"
-          type="text"
-          value={fullName}
-          onChange={handleFullNameChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
       {errors.general && (
-        <div role="alert" aria-live="polite" className="text-red-600 text-sm">
+        <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
           {errors.general}
         </div>
       )}
@@ -207,9 +211,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
       >
-        {isLoading ? 'Creating account...' : 'Sign Up'}
+        {isLoading ? 'Creating account...' : 'Create Account'}
       </button>
     </form>
   )

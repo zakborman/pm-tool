@@ -14,8 +14,10 @@ interface AuthContextType {
   user: User | null
   token: string | null
   isLoading: boolean
+  isGuest: boolean
   login: (email: string, password: string) => Promise<void>
   setAuthToken: (token: string) => Promise<void>
+  loginAsGuest: () => void
   logout: () => void
 }
 
@@ -25,11 +27,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isGuest, setIsGuest] = useState(false)
 
   // Restore session from localStorage on mount
   useEffect(() => {
     const storedToken = localStorage.getItem('access_token')
-    if (storedToken) {
+    const storedGuestMode = localStorage.getItem('guest_mode')
+
+    if (storedGuestMode === 'true') {
+      setIsGuest(true)
+    } else if (storedToken) {
       setIsLoading(true)
       fetchCurrentUser(storedToken)
         .then((userData) => {
@@ -108,14 +115,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const loginAsGuest = () => {
+    localStorage.setItem('guest_mode', 'true')
+    setIsGuest(true)
+  }
+
   const logout = () => {
     localStorage.removeItem('access_token')
+    localStorage.removeItem('guest_mode')
     setToken(null)
     setUser(null)
+    setIsGuest(false)
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, setAuthToken, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, isGuest, login, setAuthToken, loginAsGuest, logout }}>
       {children}
     </AuthContext.Provider>
   )

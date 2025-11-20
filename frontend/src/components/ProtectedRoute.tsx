@@ -9,14 +9,14 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, isLoading } = useAuth()
+  const { user, isGuest, isLoading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!isLoading && !user && !isGuest) {
       router.push('/login')
     }
-  }, [user, isLoading, router])
+  }, [user, isGuest, isLoading, router])
 
   if (isLoading) {
     return (
@@ -29,7 +29,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     )
   }
 
-  if (!user) {
+  if (!user && !isGuest) {
     return null
   }
 

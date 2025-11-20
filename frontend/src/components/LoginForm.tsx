@@ -134,9 +134,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+          Email Address
+        </label>
         <input
           id="email"
           type="text"
@@ -144,16 +146,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           onChange={handleEmailChange}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : undefined}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          placeholder="you@example.com"
         />
         {errors.email && (
-          <div id="email-error" role="alert">
+          <div id="email-error" role="alert" className="text-red-600 text-sm mt-2">
             {errors.email}
           </div>
         )}
       </div>
 
       <div>
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+          Password
+        </label>
         <input
           id="password"
           type="password"
@@ -161,22 +167,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           onChange={handlePasswordChange}
           aria-invalid={!!errors.password}
           aria-describedby={errors.password ? 'password-error' : undefined}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          placeholder="••••••••"
         />
         {errors.password && (
-          <div id="password-error" role="alert">
+          <div id="password-error" role="alert" className="text-red-600 text-sm mt-2">
             {errors.password}
           </div>
         )}
       </div>
 
       {errors.general && (
-        <div role="alert" aria-live="polite">
+        <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
           {errors.general}
         </div>
       )}
 
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Logging in...' : 'Log In'}
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full bg-blue-600 text-white font-medium py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      >
+        {isLoading ? 'Logging in...' : 'Sign In'}
       </button>
     </form>
   )

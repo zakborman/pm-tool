@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import KanbanBoard, { Task } from '@/components/KanbanBoard'
@@ -17,7 +18,7 @@ interface User {
 }
 
 export default function DashboardPage() {
-  const { user, token, logout } = useAuth()
+  const { user, token, isGuest, logout } = useAuth()
   const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
   const [users, setUsers] = useState<User[]>([])
@@ -209,32 +210,43 @@ export default function DashboardPage() {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">PM Tool</h1>
                 <div className="flex items-center gap-3">
-                  <p className="text-sm text-gray-600">Welcome, {user?.full_name || user?.email}</p>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-                    <span className="text-xs text-gray-500">
-                      {isConnected ? 'Connected' : 'Disconnected'}
-                    </span>
-                    {onlineUsers.length > 0 && (
-                      <span className="text-xs text-gray-500 ml-2">
-                        • {onlineUsers.length} user{onlineUsers.length !== 1 ? 's' : ''} online
+                  <p className="text-sm text-gray-600">
+                    Welcome, {isGuest ? 'Guest' : (user?.full_name || user?.email)}
+                    {isGuest && (
+                      <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium">
+                        Guest Mode
                       </span>
                     )}
-                  </div>
+                  </p>
+                  {!isGuest && (
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+                      <span className="text-xs text-gray-500">
+                        {isConnected ? 'Connected' : 'Disconnected'}
+                      </span>
+                      {onlineUsers.length > 0 && (
+                        <span className="text-xs text-gray-500 ml-2">
+                          • {onlineUsers.length} user{onlineUsers.length !== 1 ? 's' : ''} online
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex gap-3">
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
-                >
-                  New Task
-                </button>
+                {!isGuest && (
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                  >
+                    New Task
+                  </button>
+                )}
                 <button
                   onClick={handleLogout}
                   className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
                 >
-                  Logout
+                  {isGuest ? 'Exit Guest Mode' : 'Logout'}
                 </button>
               </div>
             </div>
@@ -242,6 +254,33 @@ export default function DashboardPage() {
         </header>
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {isGuest && (
+            <div className="mb-6 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-5 animate-fade-in">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-yellow-900 mb-1">Guest Mode - View Only</h3>
+                  <p className="text-sm text-yellow-800 mb-3">
+                    You're viewing the dashboard as a guest with limited features. Tasks are read-only and real-time collaboration is unavailable.
+                  </p>
+                  <Link
+                    href="/register"
+                    className="inline-flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                  >
+                    Create Free Account
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
           {error && (
             <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
               <div className="flex items-center justify-between">
