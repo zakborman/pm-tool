@@ -11,7 +11,7 @@ describe('Home Page', () => {
 
   it('renders the description', () => {
     render(<Home />);
-    const description = screen.getByText(/Real-time project management collaboration tool/i);
+    const description = screen.getByText(/Real-time project management with collaboration/i);
     expect(description).toBeInTheDocument();
   });
 });

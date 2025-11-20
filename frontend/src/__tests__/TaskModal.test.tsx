@@ -79,6 +79,7 @@ describe('TaskModal', () => {
         description: 'Task description',
         priority: 'high',
         status: 'in_progress',
+        assigned_to_id: null,
       })
     })
   })

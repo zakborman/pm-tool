@@ -84,9 +84,11 @@ describe('AuthContext', () => {
       wrapper: AuthProvider,
     })
 
-    await expect(
-      result.current.login('test@example.com', 'wrongpassword')
-    ).rejects.toThrow('Incorrect email or password')
+    await act(async () => {
+      await expect(
+        result.current.login('test@example.com', 'wrongpassword')
+      ).rejects.toThrow('Incorrect email or password')
+    })
   })
 
   it('clears user and token on logout', async () => {
