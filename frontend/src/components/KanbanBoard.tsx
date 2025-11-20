@@ -89,9 +89,14 @@ export default function KanbanBoard({ tasks, onTaskMove }: KanbanBoardProps) {
                 items={columnTasks.map((t) => t.id)}
                 strategy={verticalListSortingStrategy}
               >
-                <div className="space-y-3 min-h-[200px]">
+                <div className="space-y-3 min-h-[200px] transition-all duration-200">
                   {columnTasks.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400 text-sm">No tasks</div>
+                    <div className="text-center py-8 text-gray-400 text-sm">
+                      <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                      No tasks yet
+                    </div>
                   ) : (
                     columnTasks.map((task) => (
                       <TaskCard key={task.id} task={task} />

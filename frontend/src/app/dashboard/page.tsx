@@ -143,14 +143,18 @@ export default function DashboardPage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to create task')
+        const errorData = await response.json()
+        throw new Error(errorData.detail || 'Failed to create task')
       }
 
       const newTask = await response.json()
+      // WebSocket will handle the update, but add optimistically for better UX
       setTasks((prevTasks) => [...prevTasks, newTask])
       setIsModalOpen(false)
     } catch (err) {
-      console.error('Error creating task:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create task'
+      setError(errorMessage)
+      setTimeout(() => setError(null), 5000)
     }
   }
 
@@ -168,17 +172,21 @@ export default function DashboardPage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to update task')
+        const errorData = await response.json()
+        throw new Error(errorData.detail || 'Failed to update task')
       }
 
       const updatedTask = await response.json()
+      // WebSocket will handle the update, but update optimistically for better UX
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
       )
       setIsModalOpen(false)
       setEditingTask(undefined)
     } catch (err) {
-      console.error('Error updating task:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update task'
+      setError(errorMessage)
+      setTimeout(() => setError(null), 5000)
     }
   }
 
@@ -234,6 +242,20 @@ export default function DashboardPage() {
         </header>
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <p className="text-red-800">{error}</p>
+                <button
+                  onClick={() => setError(null)}
+                  className="text-red-600 hover:text-red-700 font-medium"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
+
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
@@ -241,18 +263,10 @@ export default function DashboardPage() {
                 <p className="mt-4 text-gray-600">Loading tasks...</p>
               </div>
             </div>
-          ) : error ? (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-red-800">{error}</p>
-              <button
-                onClick={fetchTasks}
-                className="mt-2 text-red-600 hover:text-red-700 font-medium"
-              >
-                Try again
-              </button>
-            </div>
           ) : (
-            <KanbanBoard tasks={tasks} onTaskMove={handleTaskMove} />
+            <div className="animate-fade-in">
+              <KanbanBoard tasks={tasks} onTaskMove={handleTaskMove} />
+            </div>
           )}
         </main>
 
