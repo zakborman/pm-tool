@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, FormEvent } from 'react'
-import { createPortal } from 'react-dom'
 import { Task } from './KanbanBoard'
 
 interface TaskModalProps {
@@ -33,11 +32,6 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
   const [status, setStatus] = useState<'todo' | 'in_progress' | 'done'>('todo')
   const [assignedToId, setAssignedToId] = useState<number | null>(null)
   const [errors, setErrors] = useState<{ title?: string }>({})
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
     if (task) {
@@ -84,12 +78,12 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
     })
   }
 
-  if (!isOpen || !mounted) {
+  if (!isOpen) {
     return null
   }
 
-  const modalContent = (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 animate-fade-in" onClick={onClose}>
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 animate-fade-in" style={{ zIndex: 9999 }} onClick={onClose}>
       <div className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full transform transition-all border border-gray-700" onClick={(e) => e.stopPropagation()}>
         <div className="px-6 py-4 border-b border-gray-700">
           <h2 className="text-xl font-semibold text-white">
@@ -199,6 +193,4 @@ export default function TaskModal({ isOpen, onClose, onSave, task, users = [] }:
       </div>
     </div>
   )
-
-  return createPortal(modalContent, document.body)
 }
