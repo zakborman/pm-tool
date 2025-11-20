@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import KanbanBoard, { Task } from '@/components/KanbanBoard'
+import TaskModal, { TaskFormData } from '@/components/TaskModal'
 
 const API_BASE_URL = 'http://localhost:8000/api/v1'
 
@@ -14,6 +15,8 @@ export default function DashboardPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingTask, setEditingTask] = useState<Task | undefined>(undefined)
 
   useEffect(() => {
     if (token) {
@@ -73,6 +76,64 @@ export default function DashboardPage() {
     }
   }
 
+  const handleCreateTask = async (taskData: TaskFormData) => {
+    if (!token) return
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskData),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create task')
+      }
+
+      const newTask = await response.json()
+      setTasks((prevTasks) => [...prevTasks, newTask])
+      setIsModalOpen(false)
+    } catch (err) {
+      console.error('Error creating task:', err)
+    }
+  }
+
+  const handleEditTask = async (taskData: TaskFormData) => {
+    if (!token || !editingTask) return
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks/${editingTask.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskData),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update task')
+      }
+
+      const updatedTask = await response.json()
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+      )
+      setIsModalOpen(false)
+      setEditingTask(undefined)
+    } catch (err) {
+      console.error('Error updating task:', err)
+    }
+  }
+
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setEditingTask(undefined)
+  }
+
   const handleLogout = () => {
     logout()
     router.push('/')
@@ -88,12 +149,20 @@ export default function DashboardPage() {
                 <h1 className="text-2xl font-bold text-gray-900">PM Tool</h1>
                 <p className="text-sm text-gray-600">Welcome, {user?.full_name || user?.email}</p>
               </div>
-              <button
-                onClick={handleLogout}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-              >
-                Logout
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                >
+                  New Task
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </header>
@@ -120,6 +189,13 @@ export default function DashboardPage() {
             <KanbanBoard tasks={tasks} onTaskMove={handleTaskMove} />
           )}
         </main>
+
+        <TaskModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onSave={editingTask ? handleEditTask : handleCreateTask}
+          task={editingTask}
+        />
       </div>
     </ProtectedRoute>
   )
