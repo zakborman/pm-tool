@@ -23,7 +23,7 @@ uv pip install -e ".[dev]"
 
 # Frontend setup
 cd frontend
-npm install
+npm install --legacy-peer-deps  # Required for React 19 compatibility
 ```
 
 ### Running the Application

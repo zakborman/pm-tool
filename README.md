@@ -53,7 +53,9 @@ docker-compose up -d
 ```bash
 cd backend
 uv venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate       # Bash/Zsh
+# source .venv/bin/activate.fish  # Fish shell
+# .venv\Scripts\activate          # Windows
 uv pip install -e ".[dev]"
 pytest
 ```
@@ -61,7 +63,7 @@ pytest
 3. Frontend setup:
 ```bash
 cd frontend
-npm install
+npm install --legacy-peer-deps  # Required for React 19 compatibility
 npm run dev
 ```
 
